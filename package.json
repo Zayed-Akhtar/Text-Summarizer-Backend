@@ -1,0 +1,24 @@
+{
+  "name": "text-summarizer-backend",
+  "version": "1.0.0",
+  "description": "This app summarize the given text",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zayed-Akhtar/Text-Summarizer-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zayed-Akhtar/Text-Summarizer-Backend/issues"
+  },
+  "homepage": "https://github.com/Zayed-Akhtar/Text-Summarizer-Backend#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.17.0"
+  }
+}
