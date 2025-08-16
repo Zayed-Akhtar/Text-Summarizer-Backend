@@ -4,6 +4,7 @@ const cors = require("cors");
 const imageGeneratorRouter = require('./routes/imageGeneratorRouter')
 
 const app = express();
+const db  = require('./config/mongoose-connection');
 app.use(
   cors({
     origin: "http://localhost:5173",
