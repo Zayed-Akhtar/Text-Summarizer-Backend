@@ -1,7 +1,7 @@
 const express = require('express');
-const { generateImage } = require('../controllers/imageGeneratorController');
+const { generateImage, getExistingImages } = require('../controllers/imageGeneratorController');
 const router = express.Router();
 
 router.post("/gen-image", generateImage);
-
+router.get('/get-images', getExistingImages);
 module.exports = router;

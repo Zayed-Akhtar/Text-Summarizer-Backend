@@ -1,6 +1,8 @@
 const axios = require('axios');
 require("dotenv").config();
 const { InferenceClient } = require("@huggingface/inference");
+const imageModel = require('../models/image-model');
+const { successResponse, badRequestResponse } = require('../helpers/errorResponses');
 const client = new InferenceClient(process.env.HUGGINGFACE_API_KEY);
 
 module.exports.generateImage = async(req, res)=>{
@@ -16,10 +18,29 @@ module.exports.generateImage = async(req, res)=>{
                             parameters: { num_inference_steps: 5 },
                         }); 
         const arrayBuffer = await imageBlob.arrayBuffer();
-        const base64Image = Buffer.from(arrayBuffer).toString("base64");
-        res.json({image_url: "data:image/png;base64," +  base64Image});
+        const imageBuffer = Buffer.from(arrayBuffer);
+        const base64Image = imageBuffer.toString("base64");
+        
+        await imageModel.create({
+            image:imageBuffer
+        });
+
+        res.status(200).json({image_url: "data:image/png;base64," +  base64Image});
     }
     catch (error){
-            res.status(500).json({ error: error.message });
+            return badRequestResponse(res, error.message);
     }
 };
+
+module.exports.getExistingImages = async(req, res)=>{
+    try{        
+        let images = await imageModel.find();
+        if(images.length){
+          let image_urls = images.map((ele)=> "data:image/png;base64," + ele.image.toString("base64") );
+          return successResponse(res, 'success', image_urls)
+        }
+        return badRequestResponse(res, 'no existing items, start generating')
+    }catch(err){
+        badRequestResponse(res, err.message);
+    }
+}
