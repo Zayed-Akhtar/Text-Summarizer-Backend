@@ -36,8 +36,8 @@ module.exports.getExistingImages = async(req, res)=>{
     try{        
         let images = await imageModel.find();
         if(images.length){
-          let image_urls = images.map((ele)=> "data:image/png;base64," + ele.image.toString("base64") );
-          return successResponse(res, 'success', image_urls)
+          let image_datas = images.map((ele)=> ["data:image/png;base64," + ele.image.toString("base64"), ele.createdAt]);
+          return successResponse(res, 'success', image_datas)
         }
         return badRequestResponse(res, 'no existing items, start generating')
     }catch(err){
