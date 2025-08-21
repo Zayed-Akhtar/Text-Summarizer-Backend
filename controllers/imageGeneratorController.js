@@ -1,4 +1,3 @@
-const axios = require('axios');
 require("dotenv").config();
 const { InferenceClient } = require("@huggingface/inference");
 const imageModel = require('../models/image-model');
