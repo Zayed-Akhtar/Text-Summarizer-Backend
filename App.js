@@ -6,6 +6,7 @@ const textGeneratorRouter = require('./routes/textGeneratorRouter')
 
 const app = express();
 const db  = require('./config/mongoose-connection');
+const { insertSampleUser } = require('./models/user-model');
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -27,6 +28,5 @@ app.get("/", (req, res)=>{
 });
 app.use("/api/image-generator", imageGeneratorRouter);
 app.use("/api/text-generator", textGeneratorRouter);
-
 
 app.listen(3000, ()=>console.log('app is running on port 3000'));

@@ -1,0 +1,14 @@
+const mongoose = require('mongoose');
+
+const textQuerySetSchema = mongoose.Schema({
+    queries:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'textquery'
+    }],
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }
+}, {timestamps:true});
+
+module.exports = mongoose.model('textqueryset', textQuerySetSchema);
