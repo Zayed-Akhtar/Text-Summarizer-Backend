@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const textQuerySetSchema = mongoose.Schema({
     queries:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'textquery'
+        question: String,
+        answer: String
     }],
     user:{
         type:mongoose.Schema.Types.ObjectId,
