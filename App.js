@@ -3,6 +3,8 @@ const cors = require("cors");
 
 const imageGeneratorRouter = require('./routes/imageGeneratorRouter')
 const textGeneratorRouter = require('./routes/textGeneratorRouter')
+const authRouter = require('./routes/authRouter')
+
 
 const app = express();
 const db  = require('./config/mongoose-connection');
@@ -28,5 +30,6 @@ app.get("/", (req, res)=>{
 });
 app.use("/api/image-generator", imageGeneratorRouter);
 app.use("/api/text-generator", textGeneratorRouter);
+app.use("/api/authentication", authRouter);
 
 app.listen(3000, ()=>console.log('app is running on port 3000'));

@@ -21,3 +21,11 @@ export const errorResponse = (res, message)=>{
         items:null
     })
 }
+
+export const unauthorizedResposne = (res, message) =>{
+    return res.status(401).json({
+        success:false,
+        message,
+        user:null
+    });
+}
