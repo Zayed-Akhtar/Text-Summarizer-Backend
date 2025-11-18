@@ -35,20 +35,24 @@ module.exports.generateText = async (req, res) => {
 
         return successResponse(res, 'success', response.data.choices[0].message);
     } catch (err) {        
+        console.log('error from text generator', err);
+        
         return badRequestResponse(res, err.message);
     }
 }
 
 
 module.exports.saveQueries = async(req, res)=>{
-    let {queries, stackId} = req.body;
+    let {queries, stackId, userInfo} = req.body;
     try{
+        console.log('user information', userInfo);
+        
         if(stackId){
             let objectStackId = new mongoose.Types.ObjectId(stackId);
             let updatedTextQueryStack = await textquerysetModel.findOneAndUpdate({_id:objectStackId}, {queries}, {new:true});
             return successResponse(res, 'queries updated successfully', updatedTextQueryStack);
         }
-        const newTextQueryStack = await textquerysetModel.create({queries, user:'68ab5207fa590c3414b3e7f2'});
+        const newTextQueryStack = await textquerysetModel.create({queries, user:userInfo.id});
         if(newTextQueryStack){
             return successResponse(res, 'queries saved successfully', newTextQueryStack);
         }
@@ -60,7 +64,8 @@ module.exports.saveQueries = async(req, res)=>{
 
 module.exports.getRecentQueriesStack = async(req, res)=>{
     try{
-        let queryStack = await textquerysetModel.find();
+        let userInfo = req.query.userInfo;
+        let queryStack = await textquerysetModel.find({user:userInfo.id});
         if(queryStack){
             return  successResponse(res, 'Success', queryStack);
         }

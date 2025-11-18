@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const userScehma = mongoose.Schema({
     firstName: String,
     lastName: String,
-    email:String, 
+    email:String,
+    password:String, 
     querySets:[
         {type:mongoose.Schema.Types.ObjectId, ref: 'textqueryset'}
     ],
