@@ -2,6 +2,7 @@ const axios = require('axios');
 const { badRequestResponse, successResponse, errorResponse } = require('../helpers/errorResponses');
 const textquerysetModel = require('../models/textqueryset-model');
 const { mongoose } = require('mongoose');
+const userModel = require('../models/user-model');
 require("dotenv").config();
 
 
@@ -44,30 +45,40 @@ module.exports.generateText = async (req, res) => {
 
 module.exports.saveQueries = async(req, res)=>{
     let {queries, stackId, userInfo} = req.body;
-    try{
-        console.log('user information', userInfo);
-        
+    let parsedUserInfo = JSON.parse(userInfo);
+    console.log('this is user id', parsedUserInfo.id);
+    
+    try{        
         if(stackId){
+            console.log('has stack id', stackId);
+            
             let objectStackId = new mongoose.Types.ObjectId(stackId);
             let updatedTextQueryStack = await textquerysetModel.findOneAndUpdate({_id:objectStackId}, {queries}, {new:true});
             return successResponse(res, 'queries updated successfully', updatedTextQueryStack);
         }
-        const newTextQueryStack = await textquerysetModel.create({queries, user:userInfo.id});
+        const newTextQueryStack = await textquerysetModel.create({queries, user:parsedUserInfo.id});
+        const user = await userModel.findOne({_id:parsedUserInfo.id});
+        console.log('user info', user);   
+        user.querySets.push(newTextQueryStack._id);
+        await user.save();
         if(newTextQueryStack){
             return successResponse(res, 'queries saved successfully', newTextQueryStack);
         }
         return badRequestResponse(res, 'some error occured while creating entity')
     }catch(err){
+        console.log('error from save queries', err);
+        
         errorResponse(res, err.message);
     }
 }
 
 module.exports.getRecentQueriesStack = async(req, res)=>{
     try{
-        let userInfo = req.query.userInfo;
-        let queryStack = await textquerysetModel.find({user:userInfo.id});
-        if(queryStack){
-            return  successResponse(res, 'Success', queryStack);
+        let userInfo = JSON.parse(req.query.userInfo);
+        let user = await userModel.findById(userInfo.id).populate("querySets");
+        let userQueryStack = user.querySets;
+        if(userQueryStack){
+            return  successResponse(res, 'Success', userQueryStack);
         }
         return badRequestResponse(res, 'cart contains no items');
     }catch(err){

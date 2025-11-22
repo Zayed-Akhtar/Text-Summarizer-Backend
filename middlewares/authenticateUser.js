@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers["authorization"];
+  console.log('this is session token', token);
+  
   if (!token) {
     return unauthorizedResposne(res, "Unauthorized user, please login/signup");
   }
@@ -12,6 +14,8 @@ const authenticateUser = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    console.log('reached 403 error');
+    
     return res.status(403).json({ success: false, message: "Invalid token" });
   }
 };

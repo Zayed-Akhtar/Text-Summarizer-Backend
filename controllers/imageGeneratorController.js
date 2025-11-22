@@ -7,6 +7,7 @@ const client = new InferenceClient(process.env.HUGGINGFACE_API_KEY);
 module.exports.generateImage = async(req, res)=>{
     try{        
         let {prompt, userInfo} = req.body;
+        let parsedUserInfo = JSON.parse(userInfo);
           if (!prompt) {
                 return res.status(400).json({ error: "Prompt is required" });
             }
@@ -22,7 +23,7 @@ module.exports.generateImage = async(req, res)=>{
         
         await imageModel.create({
             image:imageBuffer,
-            user:userInfo.id
+            user:parsedUserInfo.id
         });
 
         res.status(200).json({image_url: "data:image/png;base64," +  base64Image});
@@ -34,7 +35,7 @@ module.exports.generateImage = async(req, res)=>{
 
 module.exports.getExistingImages = async(req, res)=>{
     try{
-        let userInfo = req.query.userInfo;        
+        let userInfo = JSON.parse(req.query.userInfo);                
         let images = await imageModel.find({user:userInfo.id});
         if(images.length){
           let image_datas = images.map((ele)=> ["data:image/png;base64," + ele.image.toString("base64"), ele.createdAt]);

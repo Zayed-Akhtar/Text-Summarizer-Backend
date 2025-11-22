@@ -4,5 +4,5 @@ const { authenticateUser } = require('../middlewares/authenticateUser');
 const router = express.Router();
 
 router.post("/gen-image", authenticateUser, generateImage);
-router.get('/get-images',authenticateUser, getExistingImages);
+router.get('/get-images', getExistingImages);
 module.exports = router;
