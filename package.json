@@ -4,7 +4,7 @@
   "description": "This app summarize the given text",
   "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
