@@ -38,7 +38,7 @@ module.exports.generateText = async (req, res) => {
     } catch (err) {        
         console.log('error from text generator', err);
         
-        return badRequestResponse(res, err.message);
+        return badRequestResponse(res, err);
     }
 }
 
