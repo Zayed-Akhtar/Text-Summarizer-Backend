@@ -3,9 +3,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const authenticateUser = (req, res, next) => {
-  const token = req.headers["authorization"];
-  console.log('this is session token', token);
-  
+  const token = req.headers["authorization"];  
   if (!token) {
     return unauthorizedResposne(res, "Unauthorized user, please login/signup");
   }
@@ -13,9 +11,7 @@ const authenticateUser = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWTSECRET_KEY);
     req.user = decoded;
     next();
-  } catch (err) {
-    console.log('reached 403 error');
-    
+  } catch (err) {    
     return res.status(403).json({ success: false, message: "Invalid token" });
   }
 };

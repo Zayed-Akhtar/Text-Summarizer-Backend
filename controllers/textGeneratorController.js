@@ -35,9 +35,7 @@ module.exports.generateText = async (req, res) => {
         const response = await axios.post(url, data, config);
 
         return successResponse(res, 'success', response.data.choices[0].message);
-    } catch (err) {        
-        console.log('error from text generator', err);
-        
+    } catch (err) {                
         return badRequestResponse(res, err);
     }
 }
@@ -45,29 +43,22 @@ module.exports.generateText = async (req, res) => {
 
 module.exports.saveQueries = async(req, res)=>{
     let {queries, stackId, userInfo} = req.body;
-    let parsedUserInfo = JSON.parse(userInfo);
-    console.log('this is user id', parsedUserInfo.id);
-    
+    let parsedUserInfo = JSON.parse(userInfo);    
     try{        
-        if(stackId){
-            console.log('has stack id', stackId);
-            
+        if(stackId){            
             let objectStackId = new mongoose.Types.ObjectId(stackId);
             let updatedTextQueryStack = await textquerysetModel.findOneAndUpdate({_id:objectStackId}, {queries}, {new:true});
             return successResponse(res, 'queries updated successfully', updatedTextQueryStack);
         }
         const newTextQueryStack = await textquerysetModel.create({queries, user:parsedUserInfo.id});
         const user = await userModel.findOne({_id:parsedUserInfo.id});
-        console.log('user info', user);   
         user.querySets.push(newTextQueryStack._id);
         await user.save();
         if(newTextQueryStack){
             return successResponse(res, 'queries saved successfully', newTextQueryStack);
         }
         return badRequestResponse(res, 'some error occured while creating entity')
-    }catch(err){
-        console.log('error from save queries', err);
-        
+    }catch(err){        
         errorResponse(res, err.message);
     }
 }

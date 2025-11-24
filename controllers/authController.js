@@ -4,11 +4,8 @@ const { generateToken } = require("../utils/generateToken");
 const bcrypt = require("bcrypt");
 
 const signup = async (req, res) => {
-  try {
-    console.log('reached signup');
-    
+  try {    
     const { firstName, lastName, email, password } = req.body;
-    console.log('data', [firstName, lastName, email, password]);
     
     // 🔹 Check if user already exists
     const existingUser = await userModel.findOne({ email });
@@ -48,24 +45,18 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  try {
-    console.log('reached login controller');
-    
+  try {    
     const { email, password } = req.body;
 
     // 🔹 Find user by email
     const user = await userModel.findOne({ email });
-    if (!user) {
-      console.log('return from unmatched user');
-      
+    if (!user) {      
       return badRequestResponse(res, "Invalid credentials");
     }
 
     // 🔹 Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-            console.log('return from unmatched password');
-
       return badRequestResponse(res, "Invalid credentials");
     }
 
